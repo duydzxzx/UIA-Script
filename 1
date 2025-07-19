@@ -1,0 +1,142 @@
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Xóa toàn bộ UI mặc định của game trong PlayerGui (trừ UI loading)
+for _, child in ipairs(playerGui:GetChildren()) do
+	if child:IsA("ScreenGui") and child.Name ~= "FullscreenLoadingUI" then
+		child:Destroy()
+	end
+end
+
+-- Disable CoreGui
+local StarterGui = game:GetService("StarterGui")
+StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
+
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "FullscreenLoadingUI"
+screenGui.ResetOnSpawn = false
+screenGui.IgnoreGuiInset = true
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screenGui.DisplayOrder = 1000
+
+-- Executor support (optional)
+if syn and syn.protect_gui then
+	syn.protect_gui(screenGui)
+end
+
+screenGui.Parent = playerGui
+
+-- Background
+local background = Instance.new("Frame")
+background.Size = UDim2.new(1, 0, 1, 0)
+background.BackgroundColor3 = Color3.new(0, 0, 0)
+background.BorderSizePixel = 0
+background.Parent = screenGui
+
+-- Title: 🌴 GROW A GARDEN 🌴
+local titleLabel = Instance.new("TextLabel")
+titleLabel.AnchorPoint = Vector2.new(0.5, 0)
+titleLabel.Position = UDim2.new(0.5, 0, 0.3, 0)
+titleLabel.Size = UDim2.new(0, 600, 0, 70)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "🌴 GROW A\nGARDEN 🌴"
+titleLabel.TextColor3 = Color3.new(1, 1, 1)
+titleLabel.Font = Enum.Font.GothamBlack
+titleLabel.TextSize = 48
+titleLabel.TextWrapped = true
+titleLabel.TextXAlignment = Enum.TextXAlignment.Center
+titleLabel.TextYAlignment = Enum.TextYAlignment.Center
+titleLabel.Parent = background
+
+-- Subtitle
+local subText = Instance.new("TextLabel")
+subText.AnchorPoint = Vector2.new(0.5, 0)
+subText.Position = UDim2.new(0.5, 0, 0.48, 0)
+subText.Size = UDim2.new(0, 500, 0, 40)
+subText.BackgroundTransparency = 1
+subText.Text = "Script Is Loading Please Wait for a While"
+subText.TextColor3 = Color3.fromRGB(200, 200, 200)
+subText.Font = Enum.Font.Gotham
+subText.TextSize = 22
+subText.TextWrapped = true
+subText.TextXAlignment = Enum.TextXAlignment.Center
+subText.TextYAlignment = Enum.TextYAlignment.Center
+subText.Parent = background
+
+-- Spinner (ảnh mèo)
+local spinner = Instance.new("ImageLabel")
+spinner.AnchorPoint = Vector2.new(0.5, 0.5)
+spinner.Position = UDim2.new(0.5, 0, 0.6, 0)
+spinner.Size = UDim2.new(0, 100, 0, 100)
+spinner.BackgroundTransparency = 1
+spinner.Image = "rbxassetid://95559154527219"
+spinner.ImageColor3 = Color3.new(1, 1, 1)
+spinner.Parent = background
+
+-- Spinner animation
+coroutine.wrap(function()
+	while spinner do
+		for i = 0, 360, 2 do
+			spinner.Rotation = i
+			task.wait(0.01)
+		end
+	end
+end)()
+
+-- Progress Bar Background
+local progressBarBg = Instance.new("Frame")
+progressBarBg.Size = UDim2.new(0.6, 0, 0.03, 0)
+progressBarBg.Position = UDim2.new(0.2, 0, 0.75, 0)
+progressBarBg.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+progressBarBg.BorderSizePixel = 0
+progressBarBg.ClipsDescendants = true
+progressBarBg.Parent = background
+
+-- Rounded corners for background
+local bgCorner = Instance.new("UICorner")
+bgCorner.CornerRadius = UDim.new(0, 12)
+bgCorner.Parent = progressBarBg
+
+-- Progress Bar Fill (green)
+local progressBar = Instance.new("Frame")
+progressBar.Size = UDim2.new(0, 0, 1, 0)
+progressBar.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+progressBar.BorderSizePixel = 0
+progressBar.Parent = progressBarBg
+
+-- Rounded corners for fill
+local fillCorner = Instance.new("UICorner")
+fillCorner.CornerRadius = UDim.new(0, 12)
+fillCorner.Parent = progressBar
+
+-- Percent Text
+local percentText = Instance.new("TextLabel")
+percentText.Text = "1%"
+percentText.Font = Enum.Font.GothamBold
+percentText.TextColor3 = Color3.new(1, 1, 1)
+percentText.TextScaled = true
+percentText.BackgroundTransparency = 1
+percentText.Size = UDim2.new(0.2, 0, 0.05, 0)
+percentText.Position = UDim2.new(0.4, 0, 0.8, 0)
+percentText.Parent = background
+
+-- Progress Logic: 1% → 100% in 240 seconds
+local totalDuration = 240
+for i = 1, 100 do
+	progressBar:TweenSize(
+		UDim2.new(i / 100, 0, 1, 0),
+		Enum.EasingDirection.Out,
+		Enum.EasingStyle.Linear,
+		totalDuration / 100,
+		true
+	)
+	percentText.Text = tostring(i) .. "%"
+	wait(totalDuration / 100)
+end
+
+-- Sau khi loading xong: bật lại CoreGui
+StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, true)
+
+-- (Tuỳ chọn) Không xoá UI loading nếu bạn muốn giữ 100% mãi
+-- screenGui:Destroy()
