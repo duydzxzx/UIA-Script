@@ -12,7 +12,7 @@ end
 local StarterGui = game:GetService("StarterGui")
 StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
 
--- Create ScreenGui
+-- Tạo ScreenGui
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "FullscreenLoadingUI"
 screenGui.ResetOnSpawn = false
@@ -20,21 +20,21 @@ screenGui.IgnoreGuiInset = true
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.DisplayOrder = 1000
 
--- Executor support (optional)
+-- Executor hỗ trợ bảo vệ GUI (nếu dùng Synapse)
 if syn and syn.protect_gui then
 	syn.protect_gui(screenGui)
 end
 
 screenGui.Parent = playerGui
 
--- Background
+-- Nền đen
 local background = Instance.new("Frame")
 background.Size = UDim2.new(1, 0, 1, 0)
 background.BackgroundColor3 = Color3.new(0, 0, 0)
 background.BorderSizePixel = 0
 background.Parent = screenGui
 
--- Title: 🌴 GROW A GARDEN 🌴
+-- Tiêu đề
 local titleLabel = Instance.new("TextLabel")
 titleLabel.AnchorPoint = Vector2.new(0.5, 0)
 titleLabel.Position = UDim2.new(0.5, 0, 0.3, 0)
@@ -49,7 +49,7 @@ titleLabel.TextXAlignment = Enum.TextXAlignment.Center
 titleLabel.TextYAlignment = Enum.TextYAlignment.Center
 titleLabel.Parent = background
 
--- Subtitle
+-- Sub text
 local subText = Instance.new("TextLabel")
 subText.AnchorPoint = Vector2.new(0.5, 0)
 subText.Position = UDim2.new(0.5, 0, 0.48, 0)
@@ -64,7 +64,7 @@ subText.TextXAlignment = Enum.TextXAlignment.Center
 subText.TextYAlignment = Enum.TextYAlignment.Center
 subText.Parent = background
 
--- Spinner (ảnh mèo)
+-- Spinner hình mèo
 local spinner = Instance.new("ImageLabel")
 spinner.AnchorPoint = Vector2.new(0.5, 0.5)
 spinner.Position = UDim2.new(0.5, 0, 0.6, 0)
@@ -74,7 +74,7 @@ spinner.Image = "rbxassetid://95559154527219"
 spinner.ImageColor3 = Color3.new(1, 1, 1)
 spinner.Parent = background
 
--- Spinner animation
+-- Animation xoay
 coroutine.wrap(function()
 	while spinner do
 		for i = 0, 360, 2 do
@@ -84,7 +84,7 @@ coroutine.wrap(function()
 	end
 end)()
 
--- Progress Bar Background
+-- Thanh progress nền
 local progressBarBg = Instance.new("Frame")
 progressBarBg.Size = UDim2.new(0.6, 0, 0.03, 0)
 progressBarBg.Position = UDim2.new(0.2, 0, 0.75, 0)
@@ -93,24 +93,22 @@ progressBarBg.BorderSizePixel = 0
 progressBarBg.ClipsDescendants = true
 progressBarBg.Parent = background
 
--- Rounded corners for background
 local bgCorner = Instance.new("UICorner")
 bgCorner.CornerRadius = UDim.new(0, 12)
 bgCorner.Parent = progressBarBg
 
--- Progress Bar Fill (green)
+-- Thanh progress màu xanh lá
 local progressBar = Instance.new("Frame")
 progressBar.Size = UDim2.new(0, 0, 1, 0)
 progressBar.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 progressBar.BorderSizePixel = 0
 progressBar.Parent = progressBarBg
 
--- Rounded corners for fill
 local fillCorner = Instance.new("UICorner")
 fillCorner.CornerRadius = UDim.new(0, 12)
 fillCorner.Parent = progressBar
 
--- Percent Text
+-- Text phần trăm
 local percentText = Instance.new("TextLabel")
 percentText.Text = "1%"
 percentText.Font = Enum.Font.GothamBold
@@ -121,8 +119,8 @@ percentText.Size = UDim2.new(0.2, 0, 0.05, 0)
 percentText.Position = UDim2.new(0.4, 0, 0.8, 0)
 percentText.Parent = background
 
--- Progress Logic: 1% → 100% in 240 seconds
-local totalDuration = 240
+-- Loading 15 giây từ 1% -> 100%
+local totalDuration = 15
 for i = 1, 100 do
 	progressBar:TweenSize(
 		UDim2.new(i / 100, 0, 1, 0),
@@ -135,8 +133,6 @@ for i = 1, 100 do
 	wait(totalDuration / 100)
 end
 
--- Sau khi loading xong: bật lại CoreGui
+-- Loading xong: bật lại UI gốc và xóa UI loading
 StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, true)
-
--- (Tuỳ chọn) Không xoá UI loading nếu bạn muốn giữ 100% mãi
--- screenGui:Destroy()
+screenGui:Destroy()
