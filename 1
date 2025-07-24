@@ -1,12 +1,7 @@
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
--- Xóa toàn bộ UI mặc định của game trong PlayerGui (trừ UI loading)
-for _, child in ipairs(playerGui:GetChildren()) do
-	if child:IsA("ScreenGui") and child.Name ~= "FullscreenLoadingUI" then
-		child:Destroy()
-	end
-end
+-- KHÔNG XÓA UI GỐC NỮA
 
 -- Disable CoreGui
 local StarterGui = game:GetService("StarterGui")
