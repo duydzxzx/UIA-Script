@@ -1,13 +1,7 @@
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
--- KHÔNG XÓA UI GỐC NỮA
-
--- Disable CoreGui
-local StarterGui = game:GetService("StarterGui")
-StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
-
--- Tạo ScreenGui
+-- Tạo ScreenGui (KHÔNG TẮT UI GAME, KHÔNG XÓA GÌ)
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "FullscreenLoadingUI"
 screenGui.ResetOnSpawn = false
@@ -59,13 +53,13 @@ subText.TextXAlignment = Enum.TextXAlignment.Center
 subText.TextYAlignment = Enum.TextYAlignment.Center
 subText.Parent = background
 
--- Spinner hình mèo
+-- Spinner hình mèo (ID cũ)
 local spinner = Instance.new("ImageLabel")
 spinner.AnchorPoint = Vector2.new(0.5, 0.5)
 spinner.Position = UDim2.new(0.5, 0, 0.6, 0)
 spinner.Size = UDim2.new(0, 100, 0, 100)
 spinner.BackgroundTransparency = 1
-spinner.Image = "rbxassetid://11468975869" -- ID mới thay thế ID sai
+spinner.Image = "rbxassetid://95559154527219"
 spinner.ImageColor3 = Color3.new(1, 1, 1)
 spinner.Parent = background
 
@@ -132,8 +126,7 @@ for i = 1, 100 do
 	task.wait(totalDuration / 100)
 end
 
--- Loading xong: bật lại UI gốc và xóa UI loading
-StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, true)
+-- Loading xong: chỉ xóa UI loading, KHÔNG bật lại CoreGui (vì không tắt)
 screenGui:Destroy()
 
 -- Chạy script Egg Predictor sau khi load xong
