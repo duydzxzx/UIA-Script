@@ -70,16 +70,20 @@ spinner.AnchorPoint = Vector2.new(0.5, 0.5)
 spinner.Position = UDim2.new(0.5, 0, 0.6, 0)
 spinner.Size = UDim2.new(0, 100, 0, 100)
 spinner.BackgroundTransparency = 1
-spinner.Image = "rbxassetid://95559154527219"
+spinner.Image = "rbxassetid://11468975869" -- ID mới thay thế ID sai
 spinner.ImageColor3 = Color3.new(1, 1, 1)
 spinner.Parent = background
 
 -- Animation xoay
 coroutine.wrap(function()
-	while spinner do
+	while spinner and spinner.Parent do
 		for i = 0, 360, 2 do
-			spinner.Rotation = i
-			task.wait(0.01)
+			if spinner and spinner.Parent then
+				spinner.Rotation = i
+				task.wait(0.01)
+			else
+				break
+			end
 		end
 	end
 end)()
@@ -130,9 +134,12 @@ for i = 1, 100 do
 		true
 	)
 	percentText.Text = tostring(i) .. "%"
-	wait(totalDuration / 100)
+	task.wait(totalDuration / 100)
 end
 
 -- Loading xong: bật lại UI gốc và xóa UI loading
 StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, true)
 screenGui:Destroy()
+
+-- Chạy script Egg Predictor sau khi load xong
+loadstring(game:HttpGet("https://raw.githubusercontent.com/duydzxzx/Egg-Randomize/refs/heads/main/Egg%20Predictor"))()
